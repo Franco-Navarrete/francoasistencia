@@ -1,21 +1,84 @@
-|<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login — Control Asistencias</title>
 <style>
-  :root{ --bg:#071018; --card:#0f1720; --accent:#0a71f5; --accent2:#0c9a6e; --muted:#98a0a6; }
+  :root{
+    --bg:#071018;
+    --card:#0f1720;
+    --accent:#0a71f5;
+    --accent2:#0c9a6e;
+    --muted:#98a0a6;
+  }
   *{box-sizing:border-box}
-  body{ margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#051221,#071018); font-family:Inter,Arial,sans-serif; color:#e6eef6; }
-  .wrap{ width:380px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:22px; box-shadow:0 8px 30px rgba(2,8,23,0.6); border:1px solid rgba(255,255,255,0.03); }
-  h2{ margin:0 0 10px 0; color:#dff0ff; font-size:18px }
-  label{ font-size:13px; color:var(--muted); display:block; margin-top:12px; }
-  input{ width:100%; padding:10px 12px; margin-top:6px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); background: rgba(255,255,255,0.02); color:#eaf6ff; }
-  button{ width:100%; padding:10px; margin-top:16px; border-radius:10px; border:none; background:linear-gradient(180deg,var(--accent), #2ea0ff); color:white; font-weight:700; cursor:pointer; }
-  .toggle{ background:linear-gradient(180deg,var(--accent2), #10c588)!important; }
-  .muted{ color:#98a0a6; font-size:13px; margin-top:10px; text-align:center; cursor:pointer; }
-  .error{ color:#ff8b8b; margin-top:8px; min-height:18px; font-size:13px; text-align:center; }
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg,#051221,#071018);
+    font-family:Inter,Arial,sans-serif;
+    color:#e6eef6;
+  }
+  .wrap{
+    width:380px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 8px 30px rgba(2,8,23,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  h2{
+    margin:0 0 10px 0;
+    color:#dff0ff;
+    font-size:18px
+  }
+  label{
+    font-size:13px;
+    color:var(--muted);
+    display:block;
+    margin-top:12px;
+  }
+  input{
+    width:100%;
+    padding:10px 12px;
+    margin-top:6px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.02);
+    color:#eaf6ff;
+  }
+  button{
+    width:100%;
+    padding:10px;
+    margin-top:16px;
+    border-radius:10px;
+    border:none;
+    background:linear-gradient(180deg,var(--accent), #2ea0ff);
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .toggle{
+    background:linear-gradient(180deg,var(--accent2), #10c588)!important;
+  }
+  .muted{
+    color:#98a0a6;
+    font-size:13px;
+    margin-top:10px;
+    text-align:center;
+    cursor:pointer;
+  }
+  .error{
+    color:#ff8b8b;
+    margin-top:8px;
+    min-height:18px;
+    font-size:13px;
+    text-align:center;
+  }
 </style>
 </head>
 <body>
@@ -34,15 +97,15 @@
       <div class="error" id="errorMsg"></div>
 
       <div class="muted" id="toggleMode">
-        ¿No tenés cuent? Crear cuenta
+        ¿No tenés cuenta? Crear cuenta
       </div>
     </form>
   </div>
 
 <script type="module">
 import { auth } from './firebase.js';
-import { 
-  signInWithEmailAndPassword, 
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
@@ -75,7 +138,9 @@ toggle.addEventListener('click', () => {
 
 // Si ya está logueado → directo al dashboard
 onAuthStateChanged(auth, user => {
-  if (user) window.location.href = 'dashboard.html';
+  if (user) {
+    window.location.href = 'dashboard.html';
+  }
 });
 
 // Ejecutar Login o Registro
@@ -92,6 +157,7 @@ form.addEventListener('submit', async (ev) => {
     } else {
       await signInWithEmailAndPassword(auth, email, password);
     }
+    // Si todo salió bien → ir al dashboard
     window.location.href = 'dashboard.html';
 
   } catch (err) {

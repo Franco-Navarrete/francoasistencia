@@ -11,31 +11,130 @@
 <style>
   :root{ --bg:#0d1114; --card:#0f1418; --muted:#98a0a6; --accent:#0a71f5; --accent-2:#0c9a6e; --danger:#e03b3b; }
   *{box-sizing:border-box}
-  body{ margin:0; padding:28px; font-family:Inter,Arial,sans-serif; background:linear-gradient(180deg,#071018,#08121a); color:#e6eef6; }
-  header{ display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; }
-  .logo{ width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--accent), #5bc8ff); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; }
+  body{
+    margin:0;
+    padding:28px;
+    font-family:Inter,Arial,sans-serif;
+    background:linear-gradient(180deg,#071018,#08121a);
+    color:#e6eef6;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:20px;
+  }
+  .logo{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent), #5bc8ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    color:#fff;
+  }
   h1{ margin:0; font-size:18px }
   .muted{ color:var(--muted); font-size:13px }
-  .container{ display:grid; grid-template-columns: 1fr 380px; gap:18px; align-items:start; }
-  @media(max-width:1100px){ .container{ grid-template-columns:1fr } header{ flex-direction:column; align-items:flex-start } }
-  .card{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 8px 24px rgba(2,8,23,0.6); }
+  .container{
+    display:grid;
+    grid-template-columns: 1fr 380px;
+    gap:18px;
+    align-items:start;
+  }
+  @media(max-width:1100px){
+    .container{ grid-template-columns:1fr }
+    header{ flex-direction:column; align-items:flex-start }
+  }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:16px;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow:0 8px 24px rgba(2,8,23,0.6);
+  }
   .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   .col{ flex:1 1 220px; min-width:180px; }
   label{ display:block; color:var(--muted); font-size:13px; margin-bottom:6px; }
-  input, select{ width:100%; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:#eaf6ff; }
-  button{ padding:9px 12px; border-radius:10px; border:none; font-weight:700; cursor:pointer; color:#fff; }
+
+  input, select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    background:rgba(15,23,42,0.85);
+    border:1px solid rgba(148,163,184,0.7);
+    color:#eaf6ff;
+    font-size:14px;
+    outline:none;
+  }
+  select{
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #eaf6ff 50%),
+      linear-gradient(135deg, #eaf6ff 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) calc(50% - 4px),
+      calc(100% - 12px) calc(50% - 4px);
+    background-size:6px 6px, 6px 6px;
+    background-repeat:no-repeat;
+    padding-right:30px;
+  }
+  input:focus, select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px rgba(37,99,235,0.6);
+  }
+
+  button{
+    padding:9px 12px;
+    border-radius:10px;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+    color:#fff;
+  }
   .btn-blue{ background:linear-gradient(180deg,var(--accent), #2ea0ff); }
   .btn-green{ background:linear-gradient(180deg,var(--accent-2), #2bd184); }
   .btn-red{ background:linear-gradient(180deg,var(--danger), #ff5b5b); }
   button:disabled{ opacity:0.45; cursor:not-allowed; }
+
   .table-wrap{ overflow:auto; border-radius:8px; margin-top:8px; }
-  table{ width:100%; border-collapse:separate; border-spacing:0; min-width:560px; color:#eaf6ff; }
-  th{ text-align:left; padding:12px 14px; color:#cfeaff; background:transparent; font-size:13px; }
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:560px;
+    color:#eaf6ff;
+  }
+  th{
+    text-align:left;
+    padding:12px 14px;
+    color:#cfeaff;
+    background:transparent;
+    font-size:13px;
+  }
   td{ padding:12px 14px; border:none; }
-  tbody tr:hover{ background:linear-gradient(90deg, rgba(10,113,245,0.06), rgba(255,255,255,0.01)); transform:translateY(-1px); }
+  tbody tr:hover{
+    background:linear-gradient(90deg, rgba(10,113,245,0.06), rgba(255,255,255,0.01));
+    transform:translateY(-1px);
+  }
   .small{ font-size:13px; color:var(--muted) }
   .pill{ padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.02); color:var(--muted) }
-  #toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:22px; background:rgba(0,0,0,0.6); color:#fff; padding:10px 16px; border-radius:10px; display:none; z-index:9999;}
+  #toast{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:22px;
+    background:rgba(0,0,0,0.6);
+    color:#fff;
+    padding:10px 16px;
+    border-radius:10px;
+    display:none;
+    z-index:9999;
+  }
   .actions{ display:flex; gap:8px; align-items:center; }
 </style>
 </head>
@@ -90,7 +189,11 @@
         </div>
         <div style="flex:1 1 140px;">
           <label>Tipo</label>
-          <select id="filterType"><option value="all">Todos</option><option>Ingreso</option><option>Egreso</option></select>
+          <select id="filterType">
+            <option value="all">Todos</option>
+            <option>Ingreso</option>
+            <option>Egreso</option>
+          </select>
         </div>
         <div style="flex:1 1 120px;">
           <label>Desde</label><input id="fStart" type="date" />
@@ -108,7 +211,14 @@
 
       <div class="table-wrap">
         <table id="movTable">
-          <thead><tr><th>Empleado</th><th>Tipo</th><th>Fecha y Hora</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Empleado</th>
+              <th>Tipo</th>
+              <th>Fecha y Hora</th>
+              <th></th>
+            </tr>
+          </thead>
           <tbody></tbody>
         </table>
       </div>
@@ -132,7 +242,16 @@
 
       <div class="table-wrap">
         <table id="employeesTable">
-          <thead><tr><th>Nombre</th><th>DNI</th><th>Puesto</th><th></th></tr></thead>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>DNI</th>
+              <th>Puesto</th>
+              <th>Tipo</th>
+              <th>Horas</th>
+              <th></th>
+            </tr>
+          </thead>
           <tbody></tbody>
         </table>
       </div>
@@ -151,17 +270,27 @@
       </div>
 
       <div class="table-wrap" style="margin-top:12px;">
-        <table id="hoursTable"><thead><tr><th>Empleado</th><th>Normales</th><th>Extras</th><th>Segundos</th></tr></thead><tbody></tbody></table>
+        <table id="hoursTable">
+          <thead><tr><th>Empleado</th><th>Normales</th><th>Extras</th><th>Segundos</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
 
-      <div style="display:flex; gap:8px; margin-top:12px; align-items:center;">
+      <div style="display:flex; gap:8px; margin-top:12px; align-items:flex-start; flex-wrap:wrap;">
         <div style="min-width:220px;">
-          <label>Exportar (CSV)</label>
+          <label>Exportar (CSV crudo)</label>
           <div><button id="exportCSV" class="btn-blue">Exportar CSV</button></div>
         </div>
+        <div style="min-width:220px;">
+          <label>Exportar TODOS (XLSX limpio)</label>
+          <div><button id="exportAllXLSX" class="btn-blue">Exportar TODOS (XLSX)</button></div>
+        </div>
         <div style="min-width:260px;">
-          <label>Exportar mes (XLSX)</label>
-          <div style="display:flex; gap:8px; align-items:center;"><input id="monthCalcExport" type="month" /><button id="exportXLSX" class="btn-blue">Exportar XLSX</button></div>
+          <label>Exportar mes (XLSX Ingreso/Egreso)</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input id="monthCalcExport" type="month" />
+            <button id="exportXLSX" class="btn-blue">Exportar XLSX</button>
+          </div>
         </div>
       </div>
 
@@ -174,24 +303,50 @@
     <div class="card">
       <h3>Agregar empleado</h3>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <div style="flex:1 1 240px;"><label>Nombre</label><input id="empName" type="text" /></div>
-        <div style="flex:1 1 160px;"><label>DNI</label><input id="empDNI" type="text" /></div>
-        <div style="flex:1 1 160px;"><label>Puesto</label><input id="empPos" type="text" /></div>
-        <div style="min-width:120px; align-self:end;"><button id="addEmpBtn" class="btn-blue">Agregar</button></div>
+        <div style="flex:1 1 240px;">
+          <label>Nombre</label>
+          <input id="empName" type="text" />
+        </div>
+        <div style="flex:1 1 160px;">
+          <label>DNI</label>
+          <input id="empDNI" type="text" />
+        </div>
+        <div style="flex:1 1 160px;">
+          <label>Puesto</label>
+          <input id="empPos" type="text" />
+        </div>
+        <div style="flex:1 1 160px;">
+          <label>Tipo</label>
+          <select id="empType">
+            <option value="">Seleccionar...</option>
+            <option value="Semanal">Semanal</option>
+            <option value="Pasante">Pasante</option>
+          </select>
+        </div>
+        <div style="flex:1 1 140px;">
+          <label>Horas por jornada</label>
+          <input id="empHours" type="number" min="1" max="12" step="0.5" placeholder="4" />
+        </div>
+        <div style="min-width:120px; align-self:end;">
+          <button id="addEmpBtn" class="btn-blue">Agregar</button>
+        </div>
       </div>
     </div>
 
     <div class="card" style="margin-top:12px;">
       <h3>Presentes</h3>
       <div class="table-wrap" style="max-height:240px; overflow:auto;">
-        <table id="presentTable"><thead><tr><th>Empleado</th><th>Puesto</th><th>Último</th></tr></thead><tbody></tbody></table>
+        <table id="presentTable">
+          <thead><tr><th>Empleado</th><th>Puesto</th><th>Último</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
 
     <div class="card" style="margin-top:12px;">
       <h3>Información</h3>
       <p class="small">Panel: <strong>Control Asistencias Secretaria de Ambiente</strong></p>
-      <p class="small">Jornada por defecto: <span class="pill">4h</span></p>
+      <p class="small">Jornada por defecto (si no se define en el empleado): <span class="pill">4h</span></p>
       <p class="small">Admins permitidos: <span class="pill">franco.e.navarrete@gmail.com</span> <span class="pill">eduardomoyano@hotmail.com</span></p>
     </div>
   </aside>
@@ -204,7 +359,7 @@
 /* imports */
 import { db, auth } from './firebase.js';
 import {
-  collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDocs
+  collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import {
   onAuthStateChanged, signOut
@@ -234,6 +389,8 @@ const refreshEmployeesBtn = document.getElementById('refreshEmployees');
 const empNameI = document.getElementById('empName');
 const empDNI = document.getElementById('empDNI');
 const empPos = document.getElementById('empPos');
+const empType = document.getElementById('empType');
+const empHoursI = document.getElementById('empHours');
 const addEmpBtn = document.getElementById('addEmpBtn');
 
 const presentTableBody = document.querySelector('#presentTable tbody');
@@ -243,10 +400,10 @@ const calcMonthBtn = document.getElementById('calcMonth');
 const dailyDate = document.getElementById('dayCalc');
 const monthCalc = document.getElementById('monthCalc');
 const hoursTableBody = document.querySelector('#hoursTable tbody');
-const monthTableBody = document.querySelector('#monthTable tbody');
 
 const exportCSVBtn = document.getElementById('exportCSV');
 const exportXLSXBtn = document.getElementById('exportXLSX');
+const exportAllXLSXBtn = document.getElementById('exportAllXLSX');
 const exportMonthInput = document.getElementById('monthCalcExport');
 
 const toast = document.getElementById('toast');
@@ -261,8 +418,7 @@ let currentUser = null;
 const ALLOWED_ADMINS = ['franco.e.navarrete@gmail.com','eduardomoyano@hotmail.com'];
 
 /* constants */
-const JORNADA_HORAS = 4;
-const JORNADA_SEG = JORNADA_HORAS * 3600;
+const JORNADA_HORAS_DEFAULT = 4;
 
 /* helpers */
 function showToast(msg, t=2200){
@@ -270,30 +426,42 @@ function showToast(msg, t=2200){
   toast.style.display = 'block';
   setTimeout(()=> toast.style.display='none', t);
 }
-function formatDateTime(d){ return d.toLocaleString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit', day:'2-digit', month:'2-digit', year:'numeric' }); }
-function secsToHHMM(sec){ const h=Math.floor(sec/3600); const m=Math.floor((sec%3600)/60); return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; }
+function formatDateTime(d){
+  return d.toLocaleString('es-AR', {
+    hour:'2-digit', minute:'2-digit', second:'2-digit',
+    day:'2-digit', month:'2-digit', year:'numeric'
+  });
+}
+function secsToHHMM(sec){
+  const h=Math.floor(sec/3600);
+  const m=Math.floor((sec%3600)/60);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function getEmpJornadaSeg(emp){
+  const h = typeof emp.jornadaHoras === 'number'
+    ? emp.jornadaHoras
+    : (emp.jornadaHoras ? Number(emp.jornadaHoras) : JORNADA_HORAS_DEFAULT);
+  const horasValidas = !isNaN(h) && h > 0 ? h : JORNADA_HORAS_DEFAULT;
+  return horasValidas * 3600;
+}
 
 /* -- AUTH guard -- */
 onAuthStateChanged(auth, user => {
   currentUser = user;
   if (!user) {
-    // not logged -> go to login
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
     return;
   }
-  // restrict by email
   const email = (user.email || '').toLowerCase();
   if (!ALLOWED_ADMINS.includes(email)) {
-    // not admin -> sign out and redirect
     showToast('Acceso denegado para este usuario', 3500);
-    signOut(auth).then(()=> window.location.href = 'login.html');
+    signOut(auth).then(()=> window.location.href = 'index.html');
     return;
   }
 
   userInfo.textContent = `Conectado: ${user.email}`;
   logoutBtn.style.display = 'inline-block';
 
-  // load data realtime
   loadEmployeesRealtime();
   loadMovementsRealtime();
 });
@@ -301,7 +469,7 @@ onAuthStateChanged(auth, user => {
 /* logout */
 logoutBtn.addEventListener('click', async ()=> {
   await signOut(auth);
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 });
 
 /* FIRESTORE realtime: employees */
@@ -322,7 +490,9 @@ function loadMovementsRealtime(){
     movements = snap.docs.map(d => {
       const data = d.data();
       const raw = data.date;
-      const date = raw && typeof raw.toDate === 'function' ? raw.toDate() : (raw instanceof Date ? raw : new Date(raw));
+      const date = raw && typeof raw.toDate === 'function'
+        ? raw.toDate()
+        : (raw instanceof Date ? raw : new Date(raw));
       return { id: d.id, ...data, date };
     });
     rebuildLast();
@@ -336,8 +506,15 @@ function refreshEmployeeSelects(){
   employeeSelect.innerHTML = '<option value="">Seleccionar...</option>';
   filterEmployee.innerHTML = '<option value="all">Todos</option>';
   employees.forEach(e => {
-    const o = document.createElement('option'); o.value = e.id; o.textContent = e.name; employeeSelect.appendChild(o);
-    const o2 = document.createElement('option'); o2.value = e.id; o2.textContent = e.name; filterEmployee.appendChild(o2);
+    const o = document.createElement('option');
+    o.value = e.id;
+    o.textContent = e.name;
+    employeeSelect.appendChild(o);
+
+    const o2 = document.createElement('option');
+    o2.value = e.id;
+    o2.textContent = e.name;
+    filterEmployee.appendChild(o2);
   });
   updateButtons();
 }
@@ -349,14 +526,19 @@ function renderEmployeesTable(filterText){
   employees.forEach(emp => {
     if(!filter || emp.name.toLowerCase().includes(filter)){
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${emp.name}</td><td>${emp.dni||''}</td><td>${emp.position||''}</td>
+      const horas = emp.jornadaHoras != null ? emp.jornadaHoras : JORNADA_HORAS_DEFAULT;
+      tr.innerHTML = `
+        <td>${emp.name}</td>
+        <td>${emp.dni||''}</td>
+        <td>${emp.position||''}</td>
+        <td>${emp.type || ''}</td>
+        <td>${horas}</td>
         <td style="text-align:right">
           <button data-id="${emp.id}" class="btn-red btn-delete-emp" style="padding:6px 8px;border-radius:8px;">Eliminar</button>
         </td>`;
       employeesTableBody.appendChild(tr);
     }
   });
-  // attach delete listeners
   document.querySelectorAll('.btn-delete-emp').forEach(b => {
     b.addEventListener('click', async (ev) => {
       const id = ev.currentTarget.dataset.id;
@@ -376,18 +558,32 @@ function renderEmployeesTable(filterText){
 
 /* search / refresh */
 if (searchEmployee) searchEmployee.addEventListener('input', ()=> renderEmployeesTable(searchEmployee.value));
-if (refreshEmployeesBtn) refreshEmployeesBtn.addEventListener('click', ()=> { loadEmployeesRealtime(); showToast('Recargando...'); });
+if (refreshEmployeesBtn) refreshEmployeesBtn.addEventListener('click', ()=> {
+  loadEmployeesRealtime();
+  showToast('Recargando...');
+});
 
 /* add employee */
 addEmpBtn.addEventListener('click', async () => {
   const name = empNameI.value?.trim();
   const dni = empDNI.value?.trim();
   const position = empPos.value?.trim();
-  if(!name || !dni || !position) return showToast('Complete todos los campos');
+  const type = empType.value;
+  const horas = empHoursI.value ? parseFloat(empHoursI.value) : JORNADA_HORAS_DEFAULT;
+
+  if(!name || !dni || !position || !type) return showToast('Complete todos los campos');
+  if(isNaN(horas) || horas <= 0) return showToast('Ingrese horas válidas (>0)');
+
   try {
-    await addDoc(collection(db,'employees'), { name, dni, position });
+    await addDoc(collection(db,'employees'), {
+      name,
+      dni,
+      position,
+      type,
+      jornadaHoras: horas
+    });
     showToast('Empleado agregado');
-    empNameI.value=''; empDNI.value=''; empPos.value='';
+    empNameI.value=''; empDNI.value=''; empPos.value=''; empType.value=''; empHoursI.value='';
   } catch (err) {
     console.error(err);
     showToast('Error al agregar empleado');
@@ -400,15 +596,22 @@ function rebuildLast(){
   movements.forEach(m => {
     if(m.employee && m.employee.id) lastMovement[m.employee.id] = m.type;
   });
-  updateButtons(); updateLastMoveUI();
+  updateButtons();
+  updateLastMoveUI();
 }
 
 /* update buttons (ingreso/egreso) */
 function updateButtons(){
   const sel = employeeSelect.value;
-  if(!sel){ btnIngreso.disabled=true; btnEgreso.disabled=true; lastMoveEl.textContent=''; return; }
+  if(!sel){
+    btnIngreso.disabled=true;
+    btnEgreso.disabled=true;
+    lastMoveEl.textContent='';
+    return;
+  }
   const last = lastMovement[sel] || null;
-  btnIngreso.disabled = (last === 'Ingreso'); btnEgreso.disabled = (last === 'Egreso');
+  btnIngreso.disabled = (last === 'Ingreso');
+  btnEgreso.disabled = (last === 'Egreso');
 }
 
 /* register movement */
@@ -417,12 +620,19 @@ btnEgreso.addEventListener('click', ()=> registerMovement('Egreso'));
 
 async function registerMovement(type){
   if(!currentUser) return showToast('Iniciá sesión');
-  const empId = employeeSelect.value; if(!empId) return showToast('Seleccioná empleado');
-  const emp = employees.find(e=>e.id===empId); if(!emp) return showToast('Empleado no encontrado');
+  const empId = employeeSelect.value;
+  if(!empId) return showToast('Seleccioná empleado');
+  const emp = employees.find(e=>e.id===empId);
+  if(!emp) return showToast('Empleado no encontrado');
   const last = lastMovement[empId] || null;
   if(last === type) return showToast(`No se permite ${type} seguido`);
   try {
-    await addDoc(collection(db,'movements'), { employee: { id: emp.id, name: emp.name }, type, date: new Date(), by: currentUser.uid });
+    await addDoc(collection(db,'movements'), {
+      employee: { id: emp.id, name: emp.name },
+      type,
+      date: new Date(),
+      by: currentUser.uid
+    });
     showToast(`${type} registrado para ${emp.name}`);
   } catch (err) {
     console.error(err);
@@ -433,7 +643,10 @@ async function registerMovement(type){
 /* update last move UI */
 function updateLastMoveUI(){
   const sel = employeeSelect.value;
-  if(!sel){ lastMoveEl.textContent = 'Último movimiento: —'; return; }
+  if(!sel){
+    lastMoveEl.textContent = 'Último movimiento: —';
+    return;
+  }
   const lm = lastMovement[sel] || 'Sin movimientos';
   lastMoveEl.textContent = `Último movimiento: ${lm}`;
 }
@@ -442,11 +655,10 @@ function updateLastMoveUI(){
 employeeSelect.addEventListener('change', ()=> {
   updateButtons();
   updateLastMoveUI();
-  // optionally filter movements by employee when chosen
   renderMovements();
 });
 
-/* Movements rendering with filters */
+/* Movements rendering with filters + eliminar individual */
 function renderMovements(){
   movTableBody.innerHTML = '';
   const fEmp = filterEmployee.value;
@@ -464,8 +676,31 @@ function renderMovements(){
 
   filtered.forEach(m => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${m.employee.name}</td><td>${m.type}</td><td>${formatDateTime(m.date)}</td>`;
+    tr.innerHTML = `
+      <td>${m.employee.name}</td>
+      <td>${m.type}</td>
+      <td>${formatDateTime(m.date)}</td>
+      <td style="text-align:right;">
+        <button data-id="${m.id}" class="btn-red btn-del-mov" style="padding:6px 8px; border-radius:8px;">
+          Eliminar
+        </button>
+      </td>
+    `;
     movTableBody.appendChild(tr);
+  });
+
+  document.querySelectorAll('.btn-del-mov').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      const id = ev.currentTarget.dataset.id;
+      if (!confirm("¿Seguro que querés eliminar este movimiento?")) return;
+      try {
+        await deleteDoc(doc(db, "movements", id));
+        showToast("Movimiento eliminado");
+      } catch (err) {
+        console.error(err);
+        showToast("Error al eliminar movimiento");
+      }
+    });
   });
 }
 
@@ -477,6 +712,10 @@ if(clearFilter) clearFilter.addEventListener('click', ()=> {
   fStart.value=''; fEnd.value='';
   renderMovements();
 });
+if (filterEmployee) filterEmployee.addEventListener('change', renderMovements);
+if (filterType)     filterType.addEventListener('change', renderMovements);
+if (fStart)         fStart.addEventListener('change', renderMovements);
+if (fEnd)           fEnd.addEventListener('change', renderMovements);
 
 /* present list */
 function refreshPresentList(){
@@ -491,22 +730,6 @@ function refreshPresentList(){
   });
 }
 
-/* load movements realtime (use earlier defined) */
-function loadMovementsRealtime(){
-  const q = query(collection(db,'movements'), orderBy('date'));
-  onSnapshot(q, snap => {
-    movements = snap.docs.map(d => {
-      const data = d.data();
-      const raw = data.date;
-      const date = raw && typeof raw.toDate === 'function' ? raw.toDate() : (raw instanceof Date ? raw : new Date(raw));
-      return { id: d.id, ...data, date };
-    });
-    rebuildLast();
-    renderMovements();
-    refreshPresentList();
-  }, err => console.error('movements snapshot', err));
-}
-
 /* Calculate hours for day */
 if(calcDayBtn) calcDayBtn.addEventListener('click', () => {
   const date = dailyDate.value;
@@ -519,99 +742,211 @@ if(calcMonthBtn) calcMonthBtn.addEventListener('click', () => {
 
 function renderHoursForDate(dateStr){
   const target = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
-  const start = new Date(target); start.setHours(0,0,0,0); const end = new Date(target); end.setHours(23,59,59,999);
+  const start = new Date(target); start.setHours(0,0,0,0);
+  const end = new Date(target); end.setHours(23,59,59,999);
   const rows = [];
   employees.forEach(emp => {
-    const em = movements.filter(m=>m.employee.id===emp.id && m.date>=start && m.date<=end).slice().sort((a,b)=>a.date-b.date);
+    const em = movements
+      .filter(m=>m.employee.id===emp.id && m.date>=start && m.date<=end)
+      .slice().sort((a,b)=>a.date-b.date);
     let total=0;
     for(let i=0;i<em.length;i++){
       if(em[i].type==='Ingreso'){
         const nextE = em.slice(i+1).find(z=>z.type==='Egreso');
-        if(nextE){ total += Math.max(0, (nextE.date.getTime()-em[i].date.getTime())/1000); const idx = em.indexOf(nextE,i+1); if(idx>i) i=idx; }
+        if(nextE){
+          total += Math.max(0, (nextE.date.getTime()-em[i].date.getTime())/1000);
+          const idx = em.indexOf(nextE,i+1);
+          if(idx>i) i=idx;
+        }
       }
     }
-    const normal = Math.min(total, JORNADA_SEG); const extra = Math.max(total - JORNADA_SEG, 0);
+    const jornadaSeg = getEmpJornadaSeg(emp);
+    const normal = Math.min(total, jornadaSeg);
+    const extra = Math.max(total - jornadaSeg, 0);
     rows.push({ name: emp.name, normal, extra, total });
   });
   hoursTableBody.innerHTML = '';
-  rows.forEach(r => { const tr=document.createElement('tr'); tr.innerHTML = `<td>${r.name}</td><td>${secsToHHMM(r.normal)}</td><td>${secsToHHMM(r.extra)}</td><td>${Math.round(r.total)}</td>`; hoursTableBody.appendChild(tr); });
+  rows.forEach(r => {
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.name}</td><td>${secsToHHMM(r.normal)}</td><td>${secsToHHMM(r.extra)}</td><td>${Math.round(r.total)}</td>`;
+    hoursTableBody.appendChild(tr);
+  });
 }
 
-/* render month */
+/* render month (usa la misma tabla hoursTable) */
 function renderMonth(monthStr){
   if(!monthStr) return showToast('Seleccioná mes');
   const [y,m] = monthStr.split('-').map(Number);
-  const start = new Date(y, m-1, 1); start.setHours(0,0,0,0); const end = new Date(y, m, 1); end.setMilliseconds(-1);
+  const start = new Date(y, m-1, 1); start.setHours(0,0,0,0);
+  const end = new Date(y, m, 1); end.setMilliseconds(-1);
   const out = [];
   employees.forEach(emp=>{
-    const em = movements.filter(x=>x.employee.id===emp.id && x.date>=start && x.date<=end).slice().sort((a,b)=>a.date-b.date);
+    const em = movements
+      .filter(x=>x.employee.id===emp.id && x.date>=start && x.date<=end)
+      .slice().sort((a,b)=>a.date-b.date);
     const dayTotals = {};
     for(let i=0;i<em.length;i++){
       if(em[i].type==='Ingreso'){
         const nextE = em.slice(i+1).find(z=>z.type==='Egreso');
-        if(nextE){ const sec = Math.max(0,(nextE.date.getTime()-em[i].date.getTime())/1000); const key = new Date(em[i].date.getFullYear(), em[i].date.getMonth(), em[i].date.getDate()).toISOString().slice(0,10); dayTotals[key]=(dayTotals[key]||0)+sec; const idx = em.indexOf(nextE,i+1); if(idx>i) i=idx;}
+        if(nextE){
+          const sec = Math.max(0,(nextE.date.getTime()-em[i].date.getTime())/1000);
+          const key = new Date(
+            em[i].date.getFullYear(),
+            em[i].date.getMonth(),
+            em[i].date.getDate()
+          ).toISOString().slice(0,10);
+          dayTotals[key]=(dayTotals[key]||0)+sec;
+          const idx = em.indexOf(nextE,i+1);
+          if(idx>i) i=idx;
+        }
       }
     }
+    const jornadaSeg = getEmpJornadaSeg(emp);
     let normal=0, extra=0, total=0;
-    for(const d in dayTotals){ const s=dayTotals[d]; total+=s; normal+=Math.min(s, JORNADA_SEG); extra+=Math.max(s - JORNADA_SEG, 0); }
+    for(const d in dayTotals){
+      const s=dayTotals[d];
+      total+=s;
+      normal+=Math.min(s, jornadaSeg);
+      extra+=Math.max(s - jornadaSeg, 0);
+    }
     out.push({ name: emp.name, normal, extra, total });
   });
-  monthTableBody.innerHTML = '';
-  out.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td>${r.name}</td><td>${secsToHHMM(r.normal)}</td><td>${secsToHHMM(r.extra)}</td><td>${Math.round(r.total)}</td>`; monthTableBody.appendChild(tr); });
+  hoursTableBody.innerHTML = '';
+  out.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.name}</td><td>${secsToHHMM(r.normal)}</td><td>${secsToHHMM(r.extra)}</td><td>${Math.round(r.total)}</td>`;
+    hoursTableBody.appendChild(tr);
+  });
 }
 
-/* Export CSV */
+/* Export CSV (crudo, por si lo necesitás) */
 if(exportCSVBtn) exportCSVBtn.addEventListener('click', ()=> {
   const header = ['id','employee.id','employee.name','type','date_iso','date_local'];
-  const rows = movements.map(m => [`"${m.id}"`,`"${m.employee.id}"`,`"${(m.employee.name||'').replace(/"/g,'""')}"`,`"${m.type}"`,`"${m.date.toISOString()}"`,`"${formatDateTime(m.date)}"`].join(','));
+  const rows = movements.map(m =>
+    [`"${m.id}"`,
+     `"${m.employee.id}"`,
+     `"${(m.employee.name||'').replace(/"/g,'""')}"`,
+     `"${m.type}"`,
+     `"${m.date.toISOString()}"`,
+     `"${formatDateTime(m.date)}"`].join(',')
+  );
   const csv = [header.join(','), ...rows].join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=UTF-8;' });
-  const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`movements_all_${(new Date()).toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`movements_all_${(new Date()).toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
   showToast('CSV generado');
 });
 
-/* Export XLSX monthly */
-if(exportXLSXBtn) exportXLSXBtn.addEventListener('click', ()=> { const monthStr = exportMonthInput.value; exportMonthToXLSX(monthStr); });
+/* Export TODOS en XLSX limpio: Empleado, Tipo, Fecha, Hora */
+if (exportAllXLSXBtn) exportAllXLSXBtn.addEventListener('click', exportAllToXLSX);
+
+function exportAllToXLSX() {
+  const rows = [
+    ["Empleado", "Tipo", "Fecha", "Hora"]
+  ];
+
+  movements.forEach(m => {
+    const fecha = m.date.toLocaleDateString('es-AR', {
+      day:'2-digit', month:'2-digit', year:'numeric'
+    });
+
+    const hora = m.date.toLocaleTimeString('es-AR', {
+      hour:'2-digit', minute:'2-digit', second:'2-digit'
+    });
+
+    rows.push([
+      m.employee.name,
+      m.type,
+      fecha,
+      hora
+    ]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, 'Movimientos');
+
+  const wbout = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  const blob = new Blob([wbout], { type:'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `movimientos_completos_${new Date().toISOString().slice(0,10)}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('XLSX creado');
+}
+
+/* Export XLSX mensual: Empleado, Fecha, Ingreso, Egreso */
+if(exportXLSXBtn) exportXLSXBtn.addEventListener('click', ()=> {
+  const monthStr = exportMonthInput.value;
+  exportMonthToXLSX(monthStr);
+});
 
 function exportMonthToXLSX(monthStr){
   if(!monthStr) return showToast('Seleccioná mes');
   const [y,m] = monthStr.split('-').map(Number);
-  const start = new Date(y, m-1, 1); start.setHours(0,0,0,0); const end = new Date(y, m, 1); end.setMilliseconds(-1);
-  const wb = XLSX.utils.book_new();
-  const summary = [['Empleado','Normales','Extras','Segundos']];
+  const start = new Date(y, m-1, 1); start.setHours(0,0,0,0);
+  const end = new Date(y, m, 1); end.setMilliseconds(-1);
+
+  const rows = [['Empleado','Fecha','Horario de ingreso','Horario de egreso']];
+
   employees.forEach(emp => {
-    const em = movements.filter(x=>x.employee.id===emp.id && x.date>=start && x.date<=end).slice().sort((a,b)=>a.date-b.date);
-    const dayTotals = {};
+    const em = movements
+      .filter(x=>x.employee.id===emp.id && x.date>=start && x.date<=end)
+      .slice().sort((a,b)=>a.date-b.date);
+
     for(let i=0;i<em.length;i++){
-      if(em[i].type==='Ingreso'){
+      if(em[i].type === 'Ingreso'){
+        const ingreso = em[i];
         const nextE = em.slice(i+1).find(z=>z.type==='Egreso');
-        if(nextE){ const diff = Math.max(0, (nextE.date.getTime()-em[i].date.getTime())/1000); const dayKey = new Date(em[i].date.getFullYear(), em[i].date.getMonth(), em[i].date.getDate()).toISOString().slice(0,10); dayTotals[dayKey] = (dayTotals[dayKey]||0) + diff; const idx = em.indexOf(nextE, i+1); if(idx>i) i=idx; }
+        const inDate = ingreso.date;
+
+        const fechaStr = inDate.toLocaleDateString('es-AR', {
+          day:'2-digit', month:'2-digit', year:'numeric'
+        });
+        const inStr = inDate.toLocaleTimeString('es-AR', {
+          hour:'2-digit', minute:'2-digit', second:'2-digit'
+        });
+        let outStr = '';
+        if(nextE){
+          outStr = nextE.date.toLocaleTimeString('es-AR', {
+            hour:'2-digit', minute:'2-digit', second:'2-digit'
+          });
+          const idx = em.indexOf(nextE, i+1);
+          if(idx>i) i = idx;
+        }
+
+        rows.push([emp.name, fechaStr, inStr, outStr]);
       }
     }
-    let normal=0, extra=0, total=0;
-    const rows = [['Fecha','Segundos','Normales','Extras']];
-    for(const d in dayTotals){
-      const sec = dayTotals[d]; total+=sec; normal+=Math.min(sec, JORNADA_SEG); extra+=Math.max(sec - JORNADA_SEG, 0);
-      rows.push([d, sec, secsToHHMM(Math.min(sec, JORNADA_SEG)), secsToHHMM(Math.max(sec - JORNADA_SEG, 0))]);
-    }
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, (emp.name||'Empleado').slice(0,30));
-    summary.push([emp.name, secsToHHMM(normal), secsToHHMM(extra), total]);
   });
-  const wsSummary = XLSX.utils.aoa_to_sheet(summary);
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumen');
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, 'Movimientos');
+
   const wbout = XLSX.write(wb, { bookType:'xlsx', type:'array' });
   const blob = new Blob([wbout], { type:'application/octet-stream' });
-  const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`resumen_${monthStr}.xlsx`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`movimientos_${monthStr}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
   showToast('XLSX creado');
 }
-
-/* Utility deleteDoc/doc import used earlier */
-import { deleteDoc as _deleteDoc, doc as _doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-/* Workaround: assign deleteDoc/doc functions to variables used in outer scope */
-const deleteDoc = _deleteDoc;
-const docRef = _doc;
-
 </script>
 </body>
 </html>
