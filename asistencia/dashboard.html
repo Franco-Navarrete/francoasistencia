@@ -257,7 +257,7 @@
               <th>Puesto</th>
               <th>Tipo</th>
               <th>Horas</th>
-              <th></th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -309,7 +309,7 @@
   <!-- Right: admin tools -->
   <aside>
     <div class="card">
-      <h3>Agregar empleado</h3>
+      <h3>Agregar / Editar empleado</h3>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <div style="flex:1 1 240px;">
           <label>Nombre</label>
@@ -335,8 +335,9 @@
           <label>Horas por jornada</label>
           <input id="empHours" type="number" min="1" max="12" step="0.5" placeholder="4" />
         </div>
-        <div style="min-width:120px; align-self:end;">
+        <div style="min-width:160px; align-self:end; display:flex; gap:8px; flex-wrap:wrap;">
           <button id="addEmpBtn" class="btn-blue">Agregar</button>
+          <button id="cancelEditBtn" class="btn-red" style="display:none;">Cancelar</button>
         </div>
       </div>
     </div>
@@ -367,7 +368,8 @@
 /* imports */
 import { db, auth } from './firebase.js';
 import {
-  collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc
+  collection, addDoc, onSnapshot, query, orderBy,
+  deleteDoc, doc, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import {
   onAuthStateChanged, signOut
@@ -401,6 +403,7 @@ const empPos = document.getElementById('empPos');
 const empType = document.getElementById('empType');
 const empHoursI = document.getElementById('empHours');
 const addEmpBtn = document.getElementById('addEmpBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
 
 const presentTableBody = document.querySelector('#presentTable tbody');
 
@@ -422,6 +425,7 @@ let employees = [];
 let movements = []; // {id, employee:{id,name}, type, date: Date}
 let lastMovement = {};
 let currentUser = null;
+let editingEmployeeId = null;
 
 /* admins allowed */
 const ALLOWED_ADMINS = ['franco.e.navarrete@gmail.com','eduardomoyano@hotmail.com'];
@@ -452,6 +456,19 @@ function getEmpJornadaSeg(emp){
     : (emp.jornadaHoras ? Number(emp.jornadaHoras) : JORNADA_HORAS_DEFAULT);
   const horasValidas = !isNaN(h) && h > 0 ? h : JORNADA_HORAS_DEFAULT;
   return horasValidas * 3600;
+}
+
+function resetEmpForm(){
+  empNameI.value='';
+  empDNI.value='';
+  empPos.value='';
+  empType.value='';
+  empHoursI.value='';
+  editingEmployeeId = null;
+  addEmpBtn.textContent = 'Agregar';
+  addEmpBtn.classList.remove('btn-green');
+  addEmpBtn.classList.add('btn-blue');
+  if (cancelEditBtn) cancelEditBtn.style.display = 'none';
 }
 
 /* -- AUTH guard -- */
@@ -518,13 +535,13 @@ function refreshEmployeeSelects(){
   filterEmployee.innerHTML = '<option value="all">Todos</option>';
 
   employees.forEach(e => {
-    // siempre en el filtro de movimientos
+    // filtro select de movimientos
     const o2 = document.createElement('option');
     o2.value = e.id;
     o2.textContent = e.name;
     filterEmployee.appendChild(o2);
 
-    // solo en el select principal según tipo
+    // select principal según tipo
     if (typeFilter !== 'all' && e.type !== typeFilter) return;
 
     const o = document.createElement('option');
@@ -550,18 +567,26 @@ function renderEmployeesTable(filterText){
         <td>${emp.position||''}</td>
         <td>${emp.type || ''}</td>
         <td>${horas}</td>
-        <td style="text-align:right">
-          <button data-id="${emp.id}" class="btn-red btn-delete-emp" style="padding:6px 8px;border-radius:8px;">Eliminar</button>
+        <td style="text-align:right;">
+          <div style="display:flex; gap:6px; justify-content:flex-end;">
+            <button data-id="${emp.id}" class="btn-blue btn-edit-emp" style="padding:6px 8px;border-radius:8px;">Editar</button>
+            <button data-id="${emp.id}" class="btn-red btn-delete-emp" style="padding:6px 8px;border-radius:8px;">Eliminar</button>
+          </div>
         </td>`;
       employeesTableBody.appendChild(tr);
     }
   });
+
+  // listeners eliminar
   document.querySelectorAll('.btn-delete-emp').forEach(b => {
     b.addEventListener('click', async (ev) => {
       const id = ev.currentTarget.dataset.id;
       const emp = employees.find(x=>x.id===id);
       if(!emp) return showToast('Empleado no encontrado');
       if(!confirm(`Confirmar eliminar a ${emp.name} (esto no borrará movimientos automáticamente)`)) return;
+
+      if (editingEmployeeId === id) resetEmpForm();
+
       try {
         await deleteDoc(doc(db, 'employees', id));
         showToast('Empleado eliminado');
@@ -569,6 +594,27 @@ function renderEmployeesTable(filterText){
         console.error(err);
         showToast('Error al eliminar');
       }
+    });
+  });
+
+  // listeners editar
+  document.querySelectorAll('.btn-edit-emp').forEach(b => {
+    b.addEventListener('click', (ev) => {
+      const id = ev.currentTarget.dataset.id;
+      const emp = employees.find(x=>x.id===id);
+      if(!emp) return showToast('Empleado no encontrado');
+
+      empNameI.value = emp.name || '';
+      empDNI.value = emp.dni || '';
+      empPos.value = emp.position || '';
+      empType.value = emp.type || '';
+      empHoursI.value = emp.jornadaHoras != null ? emp.jornadaHoras : JORNADA_HORAS_DEFAULT;
+
+      editingEmployeeId = id;
+      addEmpBtn.textContent = 'Guardar cambios';
+      addEmpBtn.classList.remove('btn-blue');
+      addEmpBtn.classList.add('btn-green');
+      if (cancelEditBtn) cancelEditBtn.style.display = 'inline-block';
     });
   });
 }
@@ -580,6 +626,11 @@ if (refreshEmployeesBtn) refreshEmployeesBtn.addEventListener('click', ()=> {
   showToast('Recargando...');
 });
 
+/* cancelar edición */
+if (cancelEditBtn) cancelEditBtn.addEventListener('click', () => {
+  resetEmpForm();
+});
+
 /* filtro tipo empleado en registrar movimiento */
 if (employeeTypeFilter) employeeTypeFilter.addEventListener('change', () => {
   employeeSelect.value = '';
@@ -588,7 +639,7 @@ if (employeeTypeFilter) employeeTypeFilter.addEventListener('change', () => {
   updateLastMoveUI();
 });
 
-/* add employee */
+/* add / update employee */
 addEmpBtn.addEventListener('click', async () => {
   const name = empNameI.value?.trim();
   const dni = empDNI.value?.trim();
@@ -600,18 +651,21 @@ addEmpBtn.addEventListener('click', async () => {
   if(isNaN(horas) || horas <= 0) return showToast('Ingrese horas válidas (>0)');
 
   try {
-    await addDoc(collection(db,'employees'), {
-      name,
-      dni,
-      position,
-      type,
-      jornadaHoras: horas
-    });
-    showToast('Empleado agregado');
-    empNameI.value=''; empDNI.value=''; empPos.value=''; empType.value=''; empHoursI.value='';
+    if (editingEmployeeId) {
+      await updateDoc(doc(db,'employees', editingEmployeeId), {
+        name, dni, position, type, jornadaHoras: horas
+      });
+      showToast('Empleado actualizado');
+    } else {
+      await addDoc(collection(db,'employees'), {
+        name, dni, position, type, jornadaHoras: horas
+      });
+      showToast('Empleado agregado');
+    }
+    resetEmpForm();
   } catch (err) {
     console.error(err);
-    showToast('Error al agregar empleado');
+    showToast('Error al guardar empleado');
   }
 });
 
@@ -844,7 +898,7 @@ function renderMonth(monthStr){
   });
 }
 
-/* Export CSV (crudo, por si lo necesitás) */
+/* Export CSV (crudo) */
 if(exportCSVBtn) exportCSVBtn.addEventListener('click', ()=> {
   const header = ['id','employee.id','employee.name','type','date_iso','date_local'];
   const rows = movements.map(m =>
@@ -868,29 +922,53 @@ if(exportCSVBtn) exportCSVBtn.addEventListener('click', ()=> {
   showToast('CSV generado');
 });
 
-/* Export TODOS en XLSX limpio: Empleado, Tipo, Fecha, Hora */
+/* Export TODOS en XLSX: Empleado, Fecha, Hora ingreso, Hora egreso */
 if (exportAllXLSXBtn) exportAllXLSXBtn.addEventListener('click', exportAllToXLSX);
 
 function exportAllToXLSX() {
   const rows = [
-    ["Empleado", "Tipo", "Fecha", "Hora"]
+    ["Empleado", "Fecha", "Hora ingreso", "Hora egreso"]
   ];
 
-  movements.forEach(m => {
-    const fecha = m.date.toLocaleDateString('es-AR', {
-      day:'2-digit', month:'2-digit', year:'numeric'
-    });
+  const ordered = movements.slice().sort((a,b) => a.date - b.date);
 
-    const hora = m.date.toLocaleTimeString('es-AR', {
-      hour:'2-digit', minute:'2-digit', second:'2-digit'
-    });
+  const byEmp = {};
+  ordered.forEach(m => {
+    const id = m.employee.id;
+    if (!byEmp[id]) byEmp[id] = { name: m.employee.name, movs: [] };
+    byEmp[id].movs.push(m);
+  });
 
-    rows.push([
-      m.employee.name,
-      m.type,
-      fecha,
-      hora
-    ]);
+  Object.values(byEmp).forEach(empData => {
+    const empName = empData.name;
+    const movs = empData.movs;
+
+    for (let i = 0; i < movs.length; i++) {
+      const m = movs[i];
+      if (m.type === 'Ingreso') {
+        const ingreso = m;
+        const inDate = ingreso.date;
+
+        const fechaStr = inDate.toLocaleDateString('es-AR', {
+          day:'2-digit', month:'2-digit', year:'numeric'
+        });
+        const inStr = inDate.toLocaleTimeString('es-AR', {
+          hour:'2-digit', minute:'2-digit', second:'2-digit'
+        });
+
+        const nextE = movs.slice(i+1).find(z => z.type === 'Egreso');
+        let outStr = '';
+        if (nextE) {
+          outStr = nextE.date.toLocaleTimeString('es-AR', {
+            hour:'2-digit', minute:'2-digit', second:'2-digit'
+          });
+          const idx = movs.indexOf(nextE, i+1);
+          if (idx > i) i = idx;
+        }
+
+        rows.push([empName, fechaStr, inStr, outStr]);
+      }
+    }
   });
 
   const wb = XLSX.utils.book_new();
