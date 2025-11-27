@@ -922,12 +922,12 @@ if(exportCSVBtn) exportCSVBtn.addEventListener('click', ()=> {
   showToast('CSV generado');
 });
 
-/* Export TODOS en XLSX: Empleado, Fecha, Hora ingreso, Hora egreso */
+/* Export TODOS en XLSX: Empleado, Fecha, Hora ingreso, Hora egreso, Horas trabajadas */
 if (exportAllXLSXBtn) exportAllXLSXBtn.addEventListener('click', exportAllToXLSX);
 
 function exportAllToXLSX() {
   const rows = [
-    ["Empleado", "Fecha", "Hora ingreso", "Hora egreso"]
+    ["Empleado", "Fecha", "Hora ingreso", "Hora egreso", "Horas trabajadas"]
   ];
 
   const ordered = movements.slice().sort((a,b) => a.date - b.date);
@@ -958,15 +958,21 @@ function exportAllToXLSX() {
 
         const nextE = movs.slice(i+1).find(z => z.type === 'Egreso');
         let outStr = '';
+        let workedStr = '';
+
         if (nextE) {
           outStr = nextE.date.toLocaleTimeString('es-AR', {
             hour:'2-digit', minute:'2-digit', second:'2-digit'
           });
+
+          const diffSec = Math.max(0, (nextE.date.getTime() - inDate.getTime()) / 1000);
+          workedStr = secsToHHMM(diffSec);
+
           const idx = movs.indexOf(nextE, i+1);
           if (idx > i) i = idx;
         }
 
-        rows.push([empName, fechaStr, inStr, outStr]);
+        rows.push([empName, fechaStr, inStr, outStr, workedStr]);
       }
     }
   });
@@ -989,7 +995,7 @@ function exportAllToXLSX() {
   showToast('XLSX creado');
 }
 
-/* Export XLSX mensual: Empleado, Fecha, Ingreso, Egreso */
+/* Export XLSX mensual: Empleado, Fecha, Ingreso, Egreso, Horas trabajadas */
 if(exportXLSXBtn) exportXLSXBtn.addEventListener('click', ()=> {
   const monthStr = exportMonthInput.value;
   exportMonthToXLSX(monthStr);
@@ -1001,7 +1007,7 @@ function exportMonthToXLSX(monthStr){
   const start = new Date(y, m-1, 1); start.setHours(0,0,0,0);
   const end = new Date(y, m, 1); end.setMilliseconds(-1);
 
-  const rows = [['Empleado','Fecha','Horario de ingreso','Horario de egreso']];
+  const rows = [['Empleado','Fecha','Horario de ingreso','Horario de egreso','Horas trabajadas']];
 
   employees.forEach(emp => {
     const em = movements
@@ -1020,16 +1026,23 @@ function exportMonthToXLSX(monthStr){
         const inStr = inDate.toLocaleTimeString('es-AR', {
           hour:'2-digit', minute:'2-digit', second:'2-digit'
         });
+
         let outStr = '';
+        let workedStr = '';
+
         if(nextE){
           outStr = nextE.date.toLocaleTimeString('es-AR', {
             hour:'2-digit', minute:'2-digit', second:'2-digit'
           });
+
+          const diffSec = Math.max(0, (nextE.date.getTime() - inDate.getTime()) / 1000);
+          workedStr = secsToHHMM(diffSec);
+
           const idx = em.indexOf(nextE, i+1);
           if(idx>i) i = idx;
         }
 
-        rows.push([emp.name, fechaStr, inStr, outStr]);
+        rows.push([emp.name, fechaStr, inStr, outStr, workedStr]);
       }
     }
   });
