@@ -62,9 +62,6 @@
     font-weight:700;
     cursor:pointer;
   }
-  .toggle{
-    background:linear-gradient(180deg,var(--accent2), #10c588)!important;
-  }
   .muted{
     color:#98a0a6;
     font-size:13px;
@@ -79,6 +76,31 @@
     font-size:13px;
     text-align:center;
   }
+
+  /* Wrapper para el campo contraseña + ojito */
+  .password-wrap{
+    position:relative;
+    margin-top:6px;
+  }
+  .password-wrap input{
+    padding-right:40px; /* espacio para el ojito */
+    margin-top:0;
+  }
+  .toggle-pass{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    border:none;
+    background:transparent;
+    color:#cbd5f5;
+    cursor:pointer;
+    padding:0;
+    font-size:18px;
+  }
+  .toggle-pass:focus{
+    outline:none;
+  }
 </style>
 </head>
 <body>
@@ -90,15 +112,16 @@
       <input id="email" type="email" placeholder="admin@ejemplo.com" required />
 
       <label for="password">Contraseña</label>
-      <input id="password" type="password" placeholder="Contraseña" required />
+      <div class="password-wrap">
+        <input id="password" type="password" placeholder="Contraseña" required />
+        <button type="button" id="togglePass" class="toggle-pass" aria-label="Mostrar u ocultar contraseña">
+          👁
+        </button>
+      </div>
 
       <button type="submit" id="actionBtn">Entrar</button>
 
       <div class="error" id="errorMsg"></div>
-
-      <div class="muted" id="toggleMode">
-        ¿No tenés cuenta? Crear cuenta
-      </div>
     </form>
   </div>
 
@@ -106,34 +129,23 @@
 import { auth } from './firebase.js';
 import {
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 // UI elements
 const form = document.getElementById('loginForm');
 const errorMsg = document.getElementById('errorMsg');
-const toggle = document.getElementById('toggleMode');
 const actionBtn = document.getElementById('actionBtn');
 const titleText = document.getElementById('titleText');
+const passInput = document.getElementById('password');
+const togglePassBtn = document.getElementById('togglePass');
 
-let modo = "login"; // "login" | "register"
-
-// Cambiar entre login y register
-toggle.addEventListener('click', () => {
-  modo = modo === "login" ? "register" : "login";
-
-  if(modo === "register") {
-    titleText.textContent = "Crear Cuenta";
-    actionBtn.textContent = "Registrarse";
-    actionBtn.classList.add("toggle");
-    toggle.textContent = "¿Ya tenés cuenta? Iniciar sesión";
-  } else {
-    titleText.textContent = "Control Asistencias — Login";
-    actionBtn.textContent = "Entrar";
-    actionBtn.classList.remove("toggle");
-    toggle.textContent = "¿No tenés cuenta? Crear cuenta";
-  }
+// Ojito: mostrar / ocultar contraseña
+togglePassBtn.addEventListener('click', () => {
+  const isPassword = passInput.type === 'password';
+  passInput.type = isPassword ? 'text' : 'password';
+  // Podés cambiar el icono si querés
+  togglePassBtn.textContent = isPassword ? '🙈' : '👁';
 });
 
 // Si ya está logueado → directo al dashboard
@@ -143,23 +155,17 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// Ejecutar Login o Registro
+// Solo LOGIN (sin crear cuentas desde acá)
 form.addEventListener('submit', async (ev) => {
   ev.preventDefault();
   errorMsg.textContent = '';
 
   const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
+  const password = passInput.value;
 
   try {
-    if(modo === "register") {
-      await createUserWithEmailAndPassword(auth, email, password);
-    } else {
-      await signInWithEmailAndPassword(auth, email, password);
-    }
-    // Si todo salió bien → ir al dashboard
+    await signInWithEmailAndPassword(auth, email, password);
     window.location.href = 'dashboard.html';
-
   } catch (err) {
     console.error(err);
     let msg = 'Error';
@@ -167,8 +173,6 @@ form.addEventListener('submit', async (ev) => {
     if (c.includes('wrong-password')) msg = 'Contraseña incorrecta';
     if (c.includes('invalid-email')) msg = 'Email inválido';
     if (c.includes('user-not-found')) msg = 'Usuario no encontrado';
-    if (c.includes('email-already')) msg = 'Este email ya está registrado';
-    if (c.includes('weak-password')) msg = 'La contraseña debe tener al menos 6 caracteres';
     if (c.includes('too-many-requests')) msg = 'Demasiados intentos. Esperá un poco';
 
     errorMsg.textContent = msg;
