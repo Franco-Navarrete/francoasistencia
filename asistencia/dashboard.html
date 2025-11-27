@@ -165,6 +165,14 @@
       <h3>Registrar movimiento</h3>
       <div class="row" style="align-items:end;">
         <div class="col">
+          <label>Tipo de empleado</label>
+          <select id="employeeTypeFilter">
+            <option value="all">Todos</option>
+            <option value="Semanal">Semanal</option>
+            <option value="Pasante">Pasante</option>
+          </select>
+        </div>
+        <div class="col">
           <label>Empleado</label>
           <select id="employeeSelect"><option value="">Seleccionar...</option></select>
         </div>
@@ -369,6 +377,7 @@ import {
 const userInfo = document.getElementById('userInfo');
 const logoutBtn = document.getElementById('logoutBtn');
 
+const employeeTypeFilter = document.getElementById('employeeTypeFilter');
 const employeeSelect = document.getElementById('employeeSelect');
 const btnIngreso = document.getElementById('btnIngreso');
 const btnEgreso = document.getElementById('btnEgreso');
@@ -503,19 +512,27 @@ function loadMovementsRealtime(){
 
 /* refresh selects and lists */
 function refreshEmployeeSelects(){
+  const typeFilter = employeeTypeFilter ? employeeTypeFilter.value : 'all';
+
   employeeSelect.innerHTML = '<option value="">Seleccionar...</option>';
   filterEmployee.innerHTML = '<option value="all">Todos</option>';
-  employees.forEach(e => {
-    const o = document.createElement('option');
-    o.value = e.id;
-    o.textContent = e.name;
-    employeeSelect.appendChild(o);
 
+  employees.forEach(e => {
+    // siempre en el filtro de movimientos
     const o2 = document.createElement('option');
     o2.value = e.id;
     o2.textContent = e.name;
     filterEmployee.appendChild(o2);
+
+    // solo en el select principal según tipo
+    if (typeFilter !== 'all' && e.type !== typeFilter) return;
+
+    const o = document.createElement('option');
+    o.value = e.id;
+    o.textContent = e.name;
+    employeeSelect.appendChild(o);
   });
+
   updateButtons();
 }
 
@@ -561,6 +578,14 @@ if (searchEmployee) searchEmployee.addEventListener('input', ()=> renderEmployee
 if (refreshEmployeesBtn) refreshEmployeesBtn.addEventListener('click', ()=> {
   loadEmployeesRealtime();
   showToast('Recargando...');
+});
+
+/* filtro tipo empleado en registrar movimiento */
+if (employeeTypeFilter) employeeTypeFilter.addEventListener('change', () => {
+  employeeSelect.value = '';
+  refreshEmployeeSelects();
+  updateButtons();
+  updateLastMoveUI();
 });
 
 /* add employee */
