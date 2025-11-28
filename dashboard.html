@@ -489,6 +489,10 @@ onAuthStateChanged(auth, user => {
     return;
   }
   const email = (user.email || '').toLowerCase();
+
+  // DEBUG: ver en consola quién entra y qué admins están permitidos
+  console.log('EMAIL LOGUEADO:', email, 'ADMITIDOS:', ALLOWED_ADMINS);
+
   if (!ALLOWED_ADMINS.includes(email)) {
     showToast('Acceso denegado para este usuario', 3500);
     signOut(auth).then(()=> window.location.href = 'index.html');
