@@ -98,7 +98,7 @@
   }
   .btn-blue{ background:linear-gradient(180deg,var(--accent), #2ea0ff); }
   .btn-green{ background:linear-gradient(180deg,var(--accent-2), #2bd184); }
-  .btn-red{ background:linear-gradient(180deg,var(--danger), #ff5b5b); }
+  .btn-red{ background:linear-gradient(180deg,var(--danger), #e03b3b); }
   button:disabled{ opacity:0.45; cursor:not-allowed; }
 
   .table-wrap{ overflow:auto; border-radius:8px; margin-top:8px; }
@@ -356,7 +356,12 @@
       <h3>Información</h3>
       <p class="small">Panel: <strong>Control Asistencias Secretaria de Ambiente</strong></p>
       <p class="small">Jornada por defecto (si no se define en el empleado): <span class="pill">4h</span></p>
-      <p class="small">Admins permitidos: <span class="pill">franco.e.navarrete@gmail.com</span> <span class="pill">fatilopez@gmail.com</span> <span class="pill">fatimalopez@gmail.com</span> <span class="pill">eduardomoyano@hotmail.com</span></p>
+      <p class="small">Admins permitidos:
+        <span class="pill">franco.e.navarrete@gmail.com</span>
+        <span class="pill">fatilopez@gmail.com</span>
+        <span class="pill">fatimalopez@gmail.com</span>
+        <span class="pill">eduardomoyano@hotmail.com</span>
+      </p>
     </div>
   </aside>
 </main>
@@ -428,7 +433,12 @@ let currentUser = null;
 let editingEmployeeId = null;
 
 /* admins allowed */
-const ALLOWED_ADMINS = ['franco.e.navarrete@gmail.com','eduardomoyano@hotmail.com'];
+const ALLOWED_ADMINS = [
+  'franco.e.navarrete@gmail.com',
+  'eduardomoyano@hotmail.com',
+  'fatilopez@gmail.com',
+  'fatimalopez@gmail.com'
+];
 
 /* constants */
 const JORNADA_HORAS_DEFAULT = 4;
